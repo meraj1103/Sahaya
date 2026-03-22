@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sahaya - Civic Complaint Platform</title>
+    <meta name="description"
+        content="Sahaya is a smart civic system where citizens can report local problems such as garbage, broken roads, water leaks, drainage issues, or street light failures.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0"
+        rel="stylesheet" />
+    <!-- EmailJS Support -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // Initialize EmailJS with actual Public Key used in script.js
+            emailjs.init({
+                publicKey: "zJiCUE_Qkc0UQ-_4K",
+            });
+        })();
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Main Container representing the mobile app screen -->
+    <main class="app-container">
+
+        <!-- ==================== HOME SCREEN ==================== -->
+        <section id="home-screen" class="screen active">
+            <header class="app-header">
+                <div>
+                    <h1 class="logo">Sahaya</h1>
+                    <p class="tagline">Your Voice for Local Issues</p>
+                </div>
+                <button class="icon-btn notification-btn" aria-label="Notifications"
+                    onclick="navigateTo('notifications')">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span class="badge"></span>
+                </button>
+            </header>
+
+            <div class="content-scroll">
+                <!-- Dashboard Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: var(--primary); background: rgba(37, 99, 235, 0.1);"><span
+                                class="material-symbols-rounded">analytics</span></div>
+                        <div class="stat-info">
+                            <h3 id="stat-total">0</h3>
+                            <p>Total</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: var(--accent); background: rgba(245, 158, 11, 0.1);"><span
+                                class="material-symbols-rounded">schedule</span></div>
+                        <div class="stat-info">
+                            <h3 id="stat-pending">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #8B5CF6; background: rgba(139, 92, 246, 0.1);"><span
+                                class="material-symbols-rounded">autorenew</span></div>
+                        <div class="stat-info">
+                            <h3 id="stat-processing">0</h3>
+                            <p>Processing</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: var(--secondary); background: rgba(16, 185, 129, 0.1);">
+                            <span class="material-symbols-rounded">task_alt</span></div>
+                        <div class="stat-info">
+                            <h3 id="stat-resolved">0</h3>
+                            <p>Resolved</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Problems -->
+                <div class="section-header">
+                    <h2>Recent Problems</h2>
+                    <a href="#" class="view-all" onclick="navigateTo('problems')">View All</a>
+                </div>
+
+                <div class="problem-list" id="dashboard-recent-list">
+                    <!-- Dynamic recent problems injected here -->
+                </div>
+            </div>
+
+            <!-- Floating Action Button -->
+            <button class="fab" onclick="navigateTo('report')" aria-label="Report Problem">
+                <span class="material-symbols-rounded">add</span>
+            </button>
+        </section>
+
+        <!-- ==================== REPORT PROBLEM SCREEN ==================== -->
+        <section id="report-screen" class="screen">
+            <header class="screen-header">
+                <h2>Report Problem</h2>
+            </header>
+
+            <div class="content-scroll">
+                <div id="category-selection" class="step active">
+                    <p class="step-title">Select Problem Category</p>
+                    <div class="category-grid">
+                        <div class="category-card" onclick="selectCategory('Road Damage')">
+                            <div class="category-icon" style="color: #EF4444;"><span
+                                    class="material-symbols-rounded">add_road</span></div>
+                            <span>Road Damage</span>
+                        </div>
+                        <div class="category-card" onclick="selectCategory('Water Leak')">
+                            <div class="category-icon" style="color: #3B82F6;"><span
+                                    class="material-symbols-rounded">water_drop</span></div>
+                            <span>Water Leak</span>
+                        </div>
+                        <div class="category-card" onclick="selectCategory('Garbage')">
+                            <div class="category-icon" style="color: #8B5CF6;"><span
+                                    class="material-symbols-rounded">delete</span></div>
+                            <span>Garbage</span>
+                        </div>
+                        <div class="category-card" onclick="selectCategory('Street Light')">
+                            <div class="category-icon" style="color: #F59E0B;"><span
+                                    class="material-symbols-rounded">lightbulb</span></div>
+                            <span>Street Light</span>
+                        </div>
+                        <div class="category-card" onclick="selectCategory('Drainage')">
+                            <div class="category-icon" style="color: #06B6D4;"><span
+                                    class="material-symbols-rounded">waves</span></div>
+                            <span>Drainage</span>
+                        </div>
+                        <div class="category-card" onclick="selectCategory('Other')">
+                            <div class="category-icon" style="color: #6B7280;"><span
+                                    class="material-symbols-rounded">more_horiz</span></div>
+                            <span>Other</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="report-form" class="step hidden">
+                    <div class="form-header">
+                        <button class="back-btn" onclick="backToCategories()"><span
+                                class="material-symbols-rounded">arrow_back</span></button>
+                        <h3 id="selected-category-title">Road Damage</h3>
+                    </div>
+                    <form class="complaint-form" id="complaintForm" onsubmit="submitForm(event)">
+
+                        <!-- Hidden fields for EmailJS Template Mapping -->
+                        <input type="hidden" name="problem_type" id="hidden_problem_type" value="">
+                        <input type="hidden" name="name" id="report-name-input" value="John Doe">
+                        <input type="hidden" name="email" value="johndoe@example.com">
+                        <input type="hidden" name="image_link" value="No image uploaded">
+
+                        <div class="form-group photo-upload">
+                            <label>Upload Photo</label>
+                            <label class="upload-area" for="photo-input" id="upload-area-label" style="display: block;">
+                                <input type="file" id="photo-input" accept="image/*" style="display: none;">
+                                <div id="upload-placeholder"
+                                    style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                    <span class="material-symbols-rounded">add_a_photo</span>
+                                    <span>Tap to capture or choose photo</span>
+                                </div>
+                                <img id="photo-preview"
+                                    style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px; object-fit: cover; margin: 0 auto;" />
+                            </label>
+                        </div>
+
+                        <div class="form-group location-detect">
+                            <label>Location</label>
+                            <div class="input-with-icon">
+                                <input type="text" name="location" placeholder="Scanning current location..."
+                                    id="location-input" value="Main St, Block C">
+                                <button type="button" class="btn-icon" aria-label="Detect Location"><span
+                                        class="material-symbols-rounded">my_location</span></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" rows="4" placeholder="Describe the problem..."
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Submit Report</button>
+                    </form>
+                </div>
+                <!-- Success Message -->
+                <div id="report-success" class="step hidden success-state">
+                    <div class="success-icon"><span class="material-symbols-rounded">check_circle</span></div>
+                    <h3>Report Submitted!</h3>
+                    <p id="success-desc">Complaint successfully submitted and sent to the municipal team.</p>
+                    <button class="btn-primary" onclick="navigateTo('problems')">View My Reports</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PROBLEMS SCREEN ==================== -->
+        <section id="problems-screen" class="screen">
+            <header class="screen-header">
+                <h2>All Complaints</h2>
+                <div class="filter-tabs">
+                    <button class="tab active">Active</button>
+                    <button class="tab">Resolved</button>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+
+                <!-- Active Problems List -->
+                <div class="problem-list list-view" id="problems-main-list">
+                    <!-- Dynamic problems injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== LEADERBOARD SCREEN ==================== -->
+        <section id="leaderboard-screen" class="screen">
+            <header class="screen-header">
+                <h2>Top Contributors</h2>
+                <p class="header-subtitle">Earn points by reporting valid problems</p>
+            </header>
+
+            <div class="content-scroll">
+
+                <div class="leaderboard-top3">
+                    <div class="podium place-2">
+                        <div class="avatar bg-gradient-2">SJ</div>
+                        <div class="rank-badge">2</div>
+                        <p class="name">Sarah J.</p>
+                        <p class="points">1,240 pts</p>
+                    </div>
+                    <div class="podium place-1">
+                        <div class="avatar bg-gradient-1">MK</div>
+                        <div class="rank-badge gold">1</div>
+                        <p class="name">Mike K.</p>
+                        <p class="points">1,580 pts</p>
+                    </div>
+                    <div class="podium place-3">
+                        <div class="avatar bg-gradient-3">AR</div>
+                        <div class="rank-badge">3</div>
+                        <p class="name">Ali R.</p>
+                        <p class="points">980 pts</p>
+                    </div>
+                </div>
+
+                <div class="leaderboard-list">
+                    <div class="leader-row">
+                        <span class="rank">4</span>
+                        <div class="avatar-sm">DR</div>
+                        <div class="leader-info">
+                            <h4>David R.</h4>
+                            <p>42 problems reported</p>
+                        </div>
+                        <span class="points-badge">850 pts</span>
+                    </div>
+                    <div class="leader-row">
+                        <span class="rank">5</span>
+                        <div class="avatar-sm">EP</div>
+                        <div class="leader-info">
+                            <h4>Emma P.</h4>
+                            <p>38 problems reported</p>
+                        </div>
+                        <span class="points-badge">790 pts</span>
+                    </div>
+                    <div class="leader-row highlight-me">
+                        <span class="rank">12</span>
+                        <div class="avatar-sm my-avatar">You</div>
+                        <div class="leader-info">
+                            <h4 id="leaderboard-name-display">You</h4>
+                            <p><span id="leaderboard-submitted">0</span> problems reported</p>
+                        </div>
+                        <span class="points-badge" id="leaderboard-points">0 pts</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PROFILE SCREEN ==================== -->
+        <section id="profile-screen" class="screen">
+            <header class="profile-header">
+                <div class="profile-avatar-large" id="display-profile-initials">JD</div>
+                <h2 id="display-profile-name">John Doe</h2>
+                <p class="profile-level">Civic Champion 🏆</p>
+            </header>
+
+            <div class="content-scroll">
+
+                <div class="profile-stats">
+                    <div class="p-stat">
+                        <h3 id="profile-submitted">0</h3>
+                        <p>Submitted</p>
+                    </div>
+                    <div class="p-stat">
+                        <h3 id="profile-points">0</h3>
+                        <p>Points</p>
+                    </div>
+                    <div class="p-stat">
+                        <h3>12</h3>
+                        <p>Ratings</p>
+                    </div>
+                </div>
+
+                <div class="redeem-card">
+                    <div class="redeem-info">
+                        <h4>Available Balance</h4>
+                        <p><span id="redeem-balance">0</span> Points</p>
+                    </div>
+                    <button class="btn-redeem" onclick="navigateTo('redeem')">Redeem Now</button>
+                </div>
+
+                <div class="profile-menu">
+                    <a href="#" class="menu-item" onclick="navigateTo('details')">
+                        <div class="menu-icon"><span class="material-symbols-rounded">person</span></div>
+                        <span>Personal Details</span>
+                        <span class="material-symbols-rounded right-arrow">chevron_right</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="navigateTo('notifications')">
+                        <div class="menu-icon"><span class="material-symbols-rounded">notifications</span></div>
+                        <span>Notification Preferences</span>
+                        <span class="material-symbols-rounded right-arrow">chevron_right</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="navigateTo('verification')">
+                        <div class="menu-icon"><span class="material-symbols-rounded">verified_user</span></div>
+                        <span>Account Verification</span>
+                        <span class="material-symbols-rounded right-arrow">chevron_right</span>
+                    </a>
+                    <a href="#" class="menu-item" onclick="navigateTo('support')">
+                        <div class="menu-icon"><span class="material-symbols-rounded">help</span></div>
+                        <span>Help & Support</span>
+                        <span class="material-symbols-rounded right-arrow">chevron_right</span>
+                    </a>
+                </div>
+
+                <button class="btn-outline logout-btn">Log Out</button>
+            </div>
+        </section>
+
+        <!-- ==================== REDEEM SCREEN ==================== -->
+        <section id="redeem-screen" class="screen">
+            <header class="screen-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="goBack()"><span
+                            class="material-symbols-rounded">arrow_back</span></button>
+                    <h2>Rewards Store</h2>
+                </div>
+            </header>
+            <div class="content-scroll">
+                <div class="redeem-hero">
+                    <h3>Your Balance</h3>
+                    <h1 style="color:var(--accent); font-size: 36px;"><span id="store-balance">0</span> <span
+                            style="font-size: 16px; color: var(--text-muted)">pts</span></h1>
+                    <p style="font-size: 14px; margin-top:4px;">100 pts = ₹10 value</p>
+                </div>
+
+                <h3 style="margin: 20px 0 10px;">Available Rewards</h3>
+                <div class="rewards-grid">
+                    <div class="reward-card">
+                        <div class="r-icon" style="background:#10B98115; color:#10B981"><span
+                                class="material-symbols-rounded">train</span></div>
+                        <h4>Metro Recharge</h4>
+                        <p>₹50 Top-up</p>
+                        <button class="btn-reward" onclick="alert('Insufficient Points. You need 500 pts.')">500
+                            pts</button>
+                    </div>
+                    <div class="reward-card">
+                        <div class="r-icon" style="background:#3B82F615; color:#3B82F6"><span
+                                class="material-symbols-rounded">shopping_bag</span></div>
+                        <h4>Amazon Gift</h4>
+                        <p>₹100 Voucher</p>
+                        <button class="btn-reward" onclick="alert('Insufficient Points. You need 1000 pts.')">1,000
+                            pts</button>
+                    </div>
+                    <div class="reward-card">
+                        <div class="r-icon" style="background:#F59E0B15; color:#F59E0B"><span
+                                class="material-symbols-rounded">local_cafe</span></div>
+                        <h4>Free Coffee</h4>
+                        <p>Partner Cafes</p>
+                        <button class="btn-reward active" onclick="alert('Reward Claimed Successfully!')">200
+                            pts</button>
+                    </div>
+                    <div class="reward-card">
+                        <div class="r-icon" style="background:#8B5CF615; color:#8B5CF6"><span
+                                class="material-symbols-rounded">receipt_long</span></div>
+                        <h4>Tax Rebate</h4>
+                        <p>Civic Discount</p>
+                        <button class="btn-reward" onclick="alert('Insufficient Points. You need 5000 pts.')">5,000
+                            pts</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DETAILS SCREEN ==================== -->
+        <section id="details-screen" class="screen">
+            <header class="screen-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="goBack()"><span
+                            class="material-symbols-rounded">arrow_back</span></button>
+                    <h2>Personal Details</h2>
+                </div>
+            </header>
+            <div class="content-scroll">
+                <div class="profile-avatar-large" id="details-avatar-initials" style="margin: 0 auto 20px;">JD</div>
+                <form class="complaint-form" onsubmit="saveProfile(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="details-name-input" value="John Doe"
+                            style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" value="+91 9876543210"
+                            style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" value="john.doe@example.com"
+                            style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    </div>
+                    <div class="form-group">
+                        <label>Residential Address</label>
+                        <textarea rows="3"
+                            style="width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">A-12, Green Park Avenue, New Delhi, 110016</textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== NOTIFICATIONS SCREEN ==================== -->
+        <section id="notifications-screen" class="screen">
+            <header class="screen-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="goBack()"><span
+                            class="material-symbols-rounded">arrow_back</span></button>
+                    <h2>Notifications</h2>
+                </div>
+            </header>
+            <div class="content-scroll" style="padding:0">
+                <div class="notification-item unread">
+                    <div class="n-icon" style="color:var(--secondary); background:#10B98115"><span
+                            class="material-symbols-rounded">task_alt</span></div>
+                    <div class="n-content">
+                        <h4>Problem Resolved</h4>
+                        <p>Your report "Road Pothole Fixed" was marked as resolved.</p>
+                        <span class="n-time">2 hours ago</span>
+                    </div>
+                </div>
+                <div class="notification-item unread">
+                    <div class="n-icon" style="color:var(--accent); background:#F59E0B15"><span
+                            class="material-symbols-rounded">monetization_on</span></div>
+                    <div class="n-content">
+                        <h4>Points Earned</h4>
+                        <p>You earned 50 points for a valid problem report.</p>
+                        <span class="n-time">1 day ago</span>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="n-icon" style="color:#8B5CF6; background:#8B5CF615"><span
+                            class="material-symbols-rounded">autorenew</span></div>
+                    <div class="n-content">
+                        <h4>Status Updated</h4>
+                        <p>Authorities started processing "Broken Street Light".</p>
+                        <span class="n-time">4 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VERIFICATION SCREEN ==================== -->
+        <section id="verification-screen" class="screen">
+            <header class="screen-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="goBack()"><span
+                            class="material-symbols-rounded">arrow_back</span></button>
+                    <h2>Verification</h2>
+                </div>
+            </header>
+            <div class="content-scroll">
+                <div style="text-align:center; padding: 40px 20px;">
+                    <div
+                        style="width: 80px; height: 80px; background:#10B98115; color:var(--secondary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px;">
+                        <span class="material-symbols-rounded" style="font-size:40px;">verified</span>
+                    </div>
+                    <h3 style="margin-bottom:8px;">Account Verified</h3>
+                    <p style="color:var(--text-muted); margin-bottom:30px;">Your Aadhaar KYC has been successfully
+                        completed. You are a trusted reporter.</p>
+
+                    <div
+                        style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:left;">
+                        <p style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">Verification ID</p>
+                        <p style="font-weight:600; font-family:monospace; font-size:16px;">SHY-IN-1092844</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SUPPORT SCREEN ==================== -->
+        <section id="support-screen" class="screen">
+            <header class="screen-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="goBack()"><span
+                            class="material-symbols-rounded">arrow_back</span></button>
+                    <h2>Help & Support</h2>
+                </div>
+            </header>
+            <div class="content-scroll">
+                <div class="support-card"
+                    style="background:var(--surface); padding:20px; border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); margin-bottom:20px; text-align:center;">
+                    <span class="material-symbols-rounded"
+                        style="font-size:40px; color:var(--primary); margin-bottom:10px;">support_agent</span>
+                    <h3>Need Assistance?</h3>
+                    <p style="font-size:14px; margin-top:8px;">Our civic team replies within 24 hours.</p>
+                    <button class="btn-primary" style="margin-top:16px;" onclick="alert('Dialling 1915...')">Call
+                        Helpline 1915</button>
+                </div>
+
+                <h3 style="margin-bottom:12px;">Frequently Asked Questions</h3>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div
+                        style="background:var(--surface); padding:16px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">
+                        <h4 style="font-size:15px; margin-bottom:4px;">How do points work?</h4>
+                        <p style="font-size:13px;">You earn points when your reported problem is verified as valid by
+                            the authorities.</p>
+                    </div>
+                    <div
+                        style="background:var(--surface); padding:16px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">
+                        <h4 style="font-size:15px; margin-bottom:4px;">Can I edit a complaint?</h4>
+                        <p style="font-size:13px;">No, but you can add additional comments and photos once it is
+                            processed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== BOTTOM NAVIGATION ==================== -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="navigateTo('home')">
+                <span class="material-symbols-rounded">home</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('problems')">
+                <span class="material-symbols-rounded">list_alt</span>
+                <span>Problems</span>
+            </button>
+            <button class="nav-item report-nav" onclick="navigateTo('report')">
+                <div class="nav-fab">
+                    <span class="material-symbols-rounded">add</span>
+                </div>
+                <span>Report</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('leaderboard')">
+                <span class="material-symbols-rounded">leaderboard</span>
+                <span>Rank</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('profile')">
+                <span class="material-symbols-rounded">person</span>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
